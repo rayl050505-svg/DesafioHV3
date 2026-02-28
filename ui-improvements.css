@@ -1,0 +1,364 @@
+/* ═══════════════════════════════════════════════════════
+   STUDY QUEST PRO — UI IMPROVEMENTS CSS
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Tema Claro ──────────────────────────────────────── */
+body.light-theme {
+    background-color: #f4f5f7;
+    color: #1c1c2e;
+}
+
+/* Texto general */
+body.light-theme h2,
+body.light-theme h3,
+body.light-theme h4,
+body.light-theme p,
+body.light-theme label,
+body.light-theme span { color: #1c1c2e; }
+body.light-theme small,
+body.light-theme .section-subtitle { color: #666; }
+
+/* Tarjetas y paneles */
+body.light-theme .app-section { background: transparent; }
+body.light-theme .collapse-card,
+body.light-theme .progress-panel,
+body.light-theme .stats-panel,
+body.light-theme .study-form,
+body.light-theme .profile-header,
+body.light-theme .casino-game,
+body.light-theme .shop-item,
+body.light-theme .hell-week-card,
+body.light-theme .challenge-card,
+body.light-theme .hell-invite-card {
+    background: #ffffff;
+    border: 1px solid #e2e4e9;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+body.light-theme .collapse-header:hover { background: #f8f9fb; }
+
+/* Recursos y stats */
+body.light-theme .resource-box,
+body.light-theme .stat-box {
+    background: #f0f2f5;
+    color: #333;
+    border: 1px solid #e2e4e9;
+}
+
+/* Nav */
+body.light-theme nav.mobile-nav {
+    background: #ffffff;
+    border-top: 1px solid #e2e4e9;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+}
+body.light-theme .nav-item { color: #888; }
+body.light-theme .nav-item.active { color: #7c3aed; }
+body.light-theme .nav-item.active i { color: #7c3aed; }
+
+/* Inputs */
+body.light-theme input,
+body.light-theme select,
+body.light-theme textarea {
+    background: #f8f9fb;
+    color: #1c1c2e;
+    border: 1px solid #d0d3dc;
+}
+body.light-theme input::placeholder { color: #aaa; }
+body.light-theme input:focus,
+body.light-theme select:focus { border-color: #7c3aed; outline: none; }
+
+/* Buttons */
+body.light-theme button:not(.btn-accept-challenge):not(.btn-reject-challenge):not(.btn-send-challenge):not(.btn-create-hell):not(.btn-hell-checkin):not(.btn-tutorial-next):not(.exercise-btn):not(.duration-btn):not(.filter-btn):not(.add-friend-btn) {
+    background: #f0f2f5;
+    color: #333;
+    border: 1px solid #d0d3dc;
+}
+body.light-theme .duration-btn { background: #f0f2f5; color: #333; border: 1px solid #d0d3dc; }
+body.light-theme .duration-btn.selected { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+body.light-theme .filter-btn { background: #f0f2f5; color: #555; border: 1px solid #d0d3dc; }
+body.light-theme .filter-btn.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+body.light-theme .add-friend-btn { background: #7c3aed; color: #fff; }
+
+/* Chat */
+body.light-theme .mp-modal-box { background: #fff; border: 1px solid #e2e4e9; }
+body.light-theme .mp-modal-header h3 { color: #1c1c2e; }
+body.light-theme .chat-msg.theirs .chat-bubble { background: #f0f2f5; color: #1c1c2e; }
+body.light-theme .chat-input-row input { background: #f8f9fb; color: #1c1c2e; border-color: #d0d3dc; }
+body.light-theme #chat-messages { background: #fafafa; }
+body.light-theme .chat-sender { color: #666; }
+body.light-theme .chat-time { color: #aaa; }
+body.light-theme .challenge-select { background: #f8f9fb; color: #1c1c2e; border-color: #d0d3dc; }
+
+/* Ranking */
+body.light-theme .ranking-item { background: #fff; border: 1px solid #e2e4e9; }
+body.light-theme .ranking-item.user-item { background: #f3f0ff; border-color: #c4b5fd; }
+
+/* Acordeón chevron */
+body.light-theme .collapse-chevron { color: #888; }
+body.light-theme hr { border-color: #e2e4e9; }
+
+/* Mini profile */
+body.light-theme #mini-profile-bar { background: #fff; border-color: #e2e4e9; }
+body.light-theme .mini-name { color: #1c1c2e; }
+body.light-theme .mini-level { color: #666; }
+body.light-theme .mini-resources { color: #555; }
+
+/* Player ID badge */
+body.light-theme .player-id-display { background: #f3f0ff; border-color: #c4b5fd; color: #7c3aed; }
+body.light-theme .btn-copy-id { background: #f0f2f5; border-color: #d0d3dc; color: #555; }
+
+/* Top bar buttons */
+body.light-theme .top-bar-btn { background: rgba(0,0,0,0.07); color: #333; }
+body.light-theme #sound-toggle-btn { background: rgba(0,0,0,0.07); color: #333; }
+
+/* ── Rangos — scroll horizontal ──────────────────────── */
+.ranks-scroll {
+    display: flex;
+    flex-direction: row !important;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+.ranks-scroll::-webkit-scrollbar { height: 4px; }
+.ranks-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+body.light-theme .ranks-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
+
+/* Forzar tarjeta de rango a no encogerse */
+.ranks-scroll .rank-overview-item {
+    min-width: 130px;
+    flex-shrink: 0;
+}
+
+/* ── Ranking global — scroll vertical con altura fija ─── */
+.ranking-scroll {
+    max-height: 420px;
+    overflow-y: auto;
+    border-radius: 12px;
+    margin-top: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+.ranking-scroll::-webkit-scrollbar { width: 4px; }
+.ranking-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+body.light-theme .ranking-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
+
+/* ── Theme toggle button ─────────────────────────────── */
+#theme-toggle-btn {
+    position: fixed; top: 12px; right: 54px; z-index: 1000;
+    background: rgba(255,255,255,0.12); border: none; border-radius: 50%;
+    width: 36px; height: 36px; font-size: 1.1em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+}
+body.light-theme #theme-toggle-btn { background: rgba(0,0,0,0.08); }
+
+/* ── Mini perfil flotante ────────────────────────────── */
+#mini-profile-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 40px; padding: 6px 12px 6px 6px;
+    margin-bottom: 16px; cursor: pointer;
+    transition: background .15s;
+}
+#mini-profile-bar:hover { background: rgba(255,255,255,0.12); }
+body.light-theme #mini-profile-bar { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.08); }
+.mini-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-color,#7c3aed), #c026d3);
+    display: flex; align-items: center; justify-content: center; font-size: 1.2em;
+    flex-shrink: 0;
+}
+.mini-info { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+.mini-name { font-size: .88em; font-weight: 600; color: var(--text-color,#fff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
+.mini-level { font-size: .72em; color: var(--secondary-text,#aaa); }
+.mini-resources { display: flex; gap: 8px; font-size: .78em; color: var(--secondary-text,#ccc); }
+
+/* ── Acordeón ────────────────────────────────────────── */
+.collapse-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; margin-bottom: 12px; overflow: hidden;
+}
+.collapse-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 16px; cursor: pointer; user-select: none;
+    transition: background .15s;
+}
+.collapse-header:hover { background: rgba(255,255,255,0.06); }
+body.light-theme .collapse-header:hover { background: rgba(0,0,0,0.04); }
+.collapse-header h3 { margin: 0; font-size: .95em; }
+.collapse-chevron { color: #888; font-size: .8em; transition: transform .2s; }
+.collapse-body { padding: 0 16px 16px; }
+.collapse-body.collapsed { display: none; }
+
+/* ── Tutorial overlay ────────────────────────────────── */
+#tutorial-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    /* No llegar hasta el fondo — dejar la nav libre */
+    bottom: 62px;
+    z-index: 2000;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(1.5px);
+    display: block;
+    pointer-events: none;
+}
+/* La nav queda ENCIMA del overlay con z-index mayor */
+.mobile-nav {
+    z-index: 100000 !important;
+}
+/* El item resaltado del tutorial */
+.tutorial-highlight {
+    position: relative;
+    z-index: 100001 !important;
+    animation: tutPulse .8s ease-in-out infinite !important;
+    border-radius: 12px;
+}
+@keyframes tutPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.5); }
+    50%      { box-shadow: 0 0 0 8px rgba(124,58,237,0.25); }
+}
+#tutorial-box {
+    position: fixed;
+    background: #1e1e2e;
+    border: 1.5px solid rgba(124,58,237,0.6);
+    border-radius: 16px; padding: 18px 16px;
+    width: 320px;
+    max-width: calc(100vw - 20px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(124,58,237,0.2);
+    pointer-events: all;
+    z-index: 200001;
+    animation: tutBoxIn 0.28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes tutBoxIn {
+    from { opacity: 0; transform: translateY(14px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Flecha del tutorial */
+#tutorial-arrow {
+    position: fixed;
+    z-index: 200002;
+    font-size: 1.4em;
+    pointer-events: none;
+    animation: arrowBounce 0.6s ease-in-out infinite alternate;
+}
+@keyframes arrowBounce {
+    from { transform: translateY(0); }
+    to   { transform: translateY(5px); }
+}
+
+/* ── Top bar con botones ─────────────────────────────── */
+#top-action-bar {
+    position: fixed; top: 10px; right: 12px; z-index: 1000;
+    display: flex; gap: 6px;
+}
+.top-bar-btn {
+    background: rgba(255,255,255,0.1); border: none; border-radius: 50%;
+    width: 36px; height: 36px; font-size: 1em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
+}
+body.light-theme .top-bar-btn { background: rgba(0,0,0,0.08); }
+.top-bar-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* ── Secciones internas con espaciado mejorado ─────────── */
+.app-section > h2 { font-size: 1.1em; margin: 0 0 14px; }
+.app-section > hr { margin: 14px 0; border-color: rgba(255,255,255,0.08); }
+body.light-theme .app-section > hr { border-color: rgba(0,0,0,0.08); }
+
+/* ── Delete button for challenges ───────────────────────── */
+.btn-delete-challenge {
+    background: none; border: 1px solid rgba(255,80,80,0.3);
+    border-radius: 6px; color: #ff6b6b; padding: 3px 8px;
+    cursor: pointer; font-size: .78em; margin-top: 6px;
+}
+.btn-delete-challenge:hover { background: rgba(255,80,80,0.1); }
+
+/* ── Nav item hellweek glow ──────────────────────────────── */
+.nav-item .notif-badge {
+    position: absolute; top: 4px; right: 8px;
+    font-size: 8px; width: 8px; height: 8px;
+}
+.nav-item { position: relative; }
+
+/* ══════════════════════════════════════════════════════════
+   FIX: Ocultar nav cuando el teclado está abierto en modales
+   ══════════════════════════════════════════════════════════ */
+body.keyboard-open .mobile-nav {
+    display: none !important;
+}
+body.keyboard-open .mp-modal {
+    padding-bottom: 0 !important;
+    align-items: center !important;
+}
+body.keyboard-open .mp-modal-box {
+    border-radius: 16px !important;
+    max-height: 85vh !important;
+}
+body.keyboard-open .hell-week-modal-wrapper {
+    padding-bottom: 0 !important;
+}
+body.keyboard-open .hell-modal-box {
+    max-height: 90vh !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FIX: Optimización casino en móvil — reducir lag
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* vLights: simplificar — sin animación de background-position costosa */
+    .casino-game::before {
+        animation: none !important;
+        background: linear-gradient(45deg, var(--vg), var(--vnb), var(--vnp), var(--vp));
+        background-size: 100% 100% !important;
+        opacity: 0.5 !important;
+    }
+
+    /* rShine: cambiar left (repaint) por transform (GPU) */
+    .reel::before {
+        animation: rShineMobile 3.5s infinite !important;
+    }
+    @keyframes rShineMobile {
+        0%   { transform: translateX(-200%); }
+        100% { transform: translateX(300%); }
+    }
+
+    /* Reel spinning: añadir will-change para GPU */
+    .reel { will-change: transform; }
+
+    /* nBorder: simplificar — sin cambio de color constante */
+    .slots-machine::after {
+        animation: none !important;
+        border-color: var(--vnb) !important;
+        opacity: 0.6 !important;
+    }
+
+    /* jPulse y tGlow: reducir intensidad */
+    .jackpot-display {
+        animation: none !important;
+        box-shadow: 0 0 10px rgba(220,38,38,.35) !important;
+    }
+    .jackpot-display span {
+        animation: none !important;
+        text-shadow: 0 0 10px rgba(251,191,36,.8) !important;
+    }
+
+    /* win-box glows: reducir box-shadow */
+    .win-box.glow-gold,
+    .win-box.glow-purple,
+    .win-box.glow-green,
+    .win-box.glow-violet {
+        box-shadow: 0 0 20px rgba(124,108,245,.3) !important;
+    }
+
+    /* hellTitleGlow y skullPulse: reducir */
+    .hell-skull-row h3 {
+        animation: none !important;
+        text-shadow: 0 0 15px rgba(255,68,68,0.6) !important;
+    }
+    .hell-skull-icon {
+        animation: none !important;
+    }
+}

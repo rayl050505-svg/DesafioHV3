@@ -1,0 +1,522 @@
+/* ══════════════════════════════════════════════════════
+   STUDY QUEST PRO — ESTILOS MULTIJUGADOR
+   ══════════════════════════════════════════════════════ */
+
+/* ── Tu ID ───────────────────────────────────────────── */
+.player-id-display {
+    font-family: monospace;
+    font-size: 1.1em;
+    color: #FFD700;
+    letter-spacing: 2px;
+    background: rgba(255,215,0,0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,215,0,0.3);
+}
+
+.btn-copy-id {
+    background: none;
+    border: 1px solid #555;
+    border-radius: 6px;
+    color: #aaa;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-left: 6px;
+}
+.btn-copy-id:hover { color: #fff; border-color: #888; }
+
+/* ── Header amigos ───────────────────────────────────── */
+.friends-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.btn-global-chat {
+    background: linear-gradient(135deg, #2a6dd9, #1a4fa0);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 0.85em;
+    position: relative;
+}
+.btn-global-chat:hover { opacity: 0.9; }
+
+/* ── Indicador online ────────────────────────────────── */
+.real-badge {
+    font-size: 0.7em;
+    background: rgba(255,80,80,0.2);
+    border: 1px solid rgba(255,80,80,0.4);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: #ff6b6b;
+    vertical-align: middle;
+}
+
+/* ── Botones de amigo ────────────────────────────────── */
+.friend-chat-btn, .friend-challenge-btn {
+    background: none;
+    border: 1px solid #444;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 4px 8px;
+    transition: all 0.15s;
+}
+.friend-chat-btn:hover { background: rgba(42,109,217,0.2); border-color: #2a6dd9; }
+.friend-challenge-btn:hover { background: rgba(255,80,80,0.2); border-color: #ff5050; }
+
+/* ── Desafíos ────────────────────────────────────────── */
+.challenges-panel { margin-top: 16px; }
+.challenges-panel h3 { margin-bottom: 12px; }
+
+.challenge-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+.challenge-card.status-pending { border-color: rgba(255,200,0,0.3); }
+.challenge-card.status-active { border-color: rgba(255,80,80,0.3); }
+.challenge-card.status-completed { border-color: rgba(80,200,80,0.3); }
+
+.challenge-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+.challenge-type-icon { font-size: 1.4em; flex-shrink: 0; }
+.challenge-header > div { flex: 1; }
+.challenge-header h4 { margin: 0 0 2px; font-size: 0.95em; }
+.challenge-header small { color: #888; font-size: 0.78em; }
+
+.challenge-status-badge {
+    font-size: 0.72em;
+    padding: 2px 7px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.challenge-status-badge.pending { background: rgba(255,200,0,0.15); color: #ffd700; }
+.challenge-status-badge.active  { background: rgba(255,80,80,0.15); color: #ff6b6b; }
+.challenge-status-badge.completed { background: rgba(80,200,80,0.15); color: #6bff6b; }
+.challenge-status-badge.rejected { background: rgba(150,150,150,0.15); color: #aaa; }
+
+.challenge-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn-accept-challenge {
+    flex: 1; padding: 8px; border: none; border-radius: 8px;
+    background: linear-gradient(135deg,#2d8f4e,#1d6535);
+    color: #fff; cursor: pointer; font-size: 0.9em;
+}
+.btn-reject-challenge {
+    flex: 1; padding: 8px; border: none; border-radius: 8px;
+    background: rgba(255,80,80,0.15); color: #ff6b6b;
+    border: 1px solid rgba(255,80,80,0.3); cursor: pointer; font-size: 0.9em;
+}
+.challenge-waiting { color: #ffd700; font-size: 0.85em; margin-top: 8px; text-align: center; }
+
+.challenge-progress { margin-top: 10px; }
+.cp-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.82em; }
+.cp-row > span:first-child { width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cp-row > span:last-child { width: 40px; text-align: right; }
+.cp-bar { flex: 1; background: rgba(255,255,255,0.08); border-radius: 4px; height: 8px; overflow: hidden; }
+.cp-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+.cp-fill.mine   { background: linear-gradient(90deg, #2a6dd9, #5b9bf5); }
+.cp-fill.rival  { background: linear-gradient(90deg, #d9502a, #f57b5b); }
+
+.challenge-result { margin-top: 8px; font-size: 0.9em; text-align: center; padding: 8px; border-radius: 6px; }
+.challenge-result.won  { background: rgba(80,200,80,0.1); color: #6bff6b; }
+.challenge-result.lost { background: rgba(200,80,80,0.1); color: #ff6b6b; }
+
+/* ── Notif badge ─────────────────────────────────────── */
+.notif-badge {
+    display: inline-block;
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    font-size: 10px;
+    margin-left: 4px;
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ── Modales ─────────────────────────────────────────── */
+.mp-modal {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(4px);
+    /* Dejar espacio para la nav bar de móvil */
+    padding-bottom: 62px;
+}
+.mp-modal-box {
+    background: #1e1e2e;
+    border-radius: 16px 16px 0 0;
+    width: 100%; max-width: 500px;
+    padding: 20px;
+    max-height: calc(80vh - 62px);
+    display: flex; flex-direction: column;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+}
+.mp-modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+}
+.mp-modal-header h3 { margin: 0; }
+.mp-close-btn {
+    background: rgba(255,255,255,0.1); border: none;
+    border-radius: 50%; width: 30px; height: 30px;
+    color: #fff; cursor: pointer; font-size: 1em;
+}
+
+/* ── Chat ────────────────────────────────────────────── */
+.chat-box { height: calc(70vh - 62px); min-height: 300px; }
+.chat-messages {
+    flex: 1; overflow-y: auto; padding: 8px 4px;
+    display: flex; flex-direction: column; gap: 8px;
+}
+.chat-msg { display: flex; flex-direction: column; max-width: 75%; }
+.chat-msg.mine { align-self: flex-end; align-items: flex-end; }
+.chat-msg.theirs { align-self: flex-start; align-items: flex-start; }
+.chat-sender { font-size: 0.72em; color: #888; margin-bottom: 2px; }
+.chat-bubble {
+    padding: 8px 12px; border-radius: 12px;
+    font-size: 0.9em; line-height: 1.4; word-break: break-word;
+}
+.chat-msg.mine .chat-bubble { background: linear-gradient(135deg,#2a6dd9,#1a4fa0); color: #fff; border-radius: 12px 12px 2px 12px; }
+.chat-msg.theirs .chat-bubble { background: rgba(255,255,255,0.08); border-radius: 12px 12px 12px 2px; }
+.chat-time { font-size: 0.68em; color: #555; margin-top: 2px; }
+.chat-input-row {
+    display: flex; gap: 8px; margin-top: 10px;
+}
+.chat-input-row input {
+    flex: 1; background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 10px 12px;
+    color: #fff; font-size: 0.9em;
+}
+.chat-input-row button {
+    background: linear-gradient(135deg,#2a6dd9,#1a4fa0);
+    border: none; border-radius: 10px;
+    color: #fff; padding: 10px 16px; cursor: pointer; font-size: 1em;
+}
+
+/* ── Modal desafío ───────────────────────────────────── */
+.challenge-form {
+    display: flex; flex-direction: column; gap: 12px;
+}
+.challenge-form label { font-size: 0.85em; color: #aaa; margin-bottom: -6px; }
+.challenge-select {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 10px 12px;
+    color: #fff; font-size: 0.9em;
+}
+.btn-send-challenge {
+    background: linear-gradient(135deg,#c0392b,#8e1a10);
+    border: none; border-radius: 10px;
+    color: #fff; padding: 12px;
+    cursor: pointer; font-size: 1em; font-weight: bold;
+    margin-top: 4px;
+}
+.btn-send-challenge:hover { opacity: 0.9; }
+
+/* ══════════════════════════════════════════════════════
+   🔴 SEMANA INFERNAL — ESTILOS
+   ══════════════════════════════════════════════════════ */
+
+/* ── Efecto global cuando está activa ─────────────────── */
+body.hell-week-active {
+    --hell-glow: rgba(200, 0, 0, 0.15);
+    box-shadow: inset 0 0 0 3px rgba(200,0,0,0.4);
+}
+body.hell-week-active::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+    border: 3px solid rgba(200,0,0,0.5);
+    box-shadow: inset 0 0 40px rgba(200,0,0,0.12);
+    animation: hellPulse 2s ease-in-out infinite;
+}
+@keyframes hellPulse {
+    0%,100% { border-color: rgba(200,0,0,0.3); box-shadow: inset 0 0 30px rgba(200,0,0,0.08); }
+    50%      { border-color: rgba(255,0,0,0.7); box-shadow: inset 0 0 60px rgba(200,0,0,0.2); }
+}
+
+/* ── Casino bloqueado ─────────────────────────────────── */
+.hell-casino-locked {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.4;
+    filter: grayscale(80%);
+}
+.hell-casino-locked::after {
+    content: '🔴 BLOQUEADO — Semana Infernal activa';
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    color: #ff4444; font-size: 1.1em; font-weight: bold;
+    border-radius: 12px; pointer-events: none;
+}
+
+/* ── Sección ──────────────────────────────────────────── */
+.hell-week-section { margin-top: 20px; }
+.hell-week-section-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+}
+.btn-create-hell {
+    background: linear-gradient(135deg, #8b0000, #c0392b);
+    border: none; border-radius: 8px; color: #fff;
+    padding: 7px 14px; cursor: pointer; font-size: .85em; font-weight: bold;
+}
+.btn-create-hell:hover { opacity: .9; }
+
+/* ── Tarjeta de semana activa ─────────────────────────── */
+.hell-week-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 16px; margin-bottom: 12px;
+}
+.hell-week-card.hell-active {
+    border-color: rgba(200,0,0,0.4);
+    background: rgba(200,0,0,0.05);
+    box-shadow: 0 0 20px rgba(200,0,0,0.1);
+}
+.hell-week-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.hell-big-icon { font-size: 2em; line-height: 1; }
+.hell-week-header h4 { margin: 0 0 3px; font-size: 1em; }
+.hell-week-header small { color: #888; font-size: .78em; }
+
+/* ── Tabla de progreso ────────────────────────────────── */
+.hell-table-wrap { overflow-x: auto; margin-top: 12px; }
+.hell-progress-table {
+    width: 100%; border-collapse: collapse; font-size: .82em;
+}
+.hell-progress-table th {
+    text-align: left; padding: 6px 8px; color: #888;
+    border-bottom: 1px solid rgba(255,255,255,0.1); white-space: nowrap;
+}
+.hell-progress-table td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.hell-me-row td { background: rgba(200,0,0,0.08); font-weight: 500; }
+
+/* ── Check-in button ──────────────────────────────────── */
+.btn-hell-checkin {
+    width: 100%; padding: 10px; margin: 10px 0;
+    background: linear-gradient(135deg,#8b0000,#c0392b);
+    border: none; border-radius: 10px; color: #fff;
+    cursor: pointer; font-size: .9em; font-weight: bold;
+    animation: hellPulseBtn 1.5s ease-in-out infinite;
+}
+@keyframes hellPulseBtn {
+    0%,100% { box-shadow: 0 0 10px rgba(200,0,0,0.3); }
+    50%      { box-shadow: 0 0 25px rgba(200,0,0,0.7); }
+}
+
+/* ── Ganador del día ──────────────────────────────────── */
+.hell-day-leader {
+    background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 8px; padding: 8px 12px; font-size: .85em; margin: 8px 0;
+    color: #ffd700;
+}
+.hell-winner-block {
+    background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.4);
+    border-radius: 10px; padding: 10px 14px; margin: 8px 0;
+    color: #ffd700; font-size: .9em;
+}
+
+/* ── Invitación ───────────────────────────────────────── */
+.hell-invite-card {
+    background: rgba(200,0,0,0.08); border: 1px solid rgba(200,0,0,0.4);
+    border-radius: 12px; padding: 14px; margin-bottom: 12px;
+}
+.hell-invite-header { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+.hell-icon { font-size: 1.6em; }
+.hell-invite-header h4 { margin: 0 0 2px; }
+.hell-invite-header small { color: #888; font-size: .78em; }
+.hell-invite-rules ul { margin: 6px 0 10px 16px; padding: 0; font-size: .82em; color: #ccc; }
+.hell-invite-rules li { margin-bottom: 3px; }
+
+/* ── Modal SEMANA INFERNAL ──────────────────────────────── */
+.hell-week-modal-wrapper {
+    background: rgba(0,0,0,0.85) !important;
+    animation: hellModalIn 0.35s ease !important;
+    padding-bottom: 62px !important;
+}
+@keyframes hellModalIn {
+    from { background: rgba(0,0,0,0); }
+    to   { background: rgba(0,0,0,0.85); }
+}
+/* Partículas de fuego de fondo */
+.hell-bg-fires {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+.hell-fire-particle {
+    position: absolute;
+    bottom: -20px;
+    font-size: 1.5em;
+    animation: hellFireRise linear forwards;
+    opacity: 0.7;
+}
+@keyframes hellFireRise {
+    0%   { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.8; }
+    80%  { opacity: 0.4; }
+    100% { transform: translateY(-100vh) scale(0.4) rotate(20deg); opacity: 0; }
+}
+
+.hell-modal-box {
+    position: relative;
+    z-index: 10;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    border: 2px solid rgba(220,38,38,0.6) !important;
+    background: linear-gradient(160deg, #1a0505, #2d0a0a) !important;
+    box-shadow: 0 0 60px rgba(220,38,38,0.4), inset 0 0 40px rgba(220,38,38,0.05) !important;
+    animation: hellBoxIn 0.4s cubic-bezier(.34,1.3,.64,1);
+}
+@keyframes hellBoxIn {
+    from { transform: scale(0.8) translateY(30px); opacity: 0; }
+    to   { transform: scale(1) translateY(0);       opacity: 1; }
+}
+
+.hell-modal-header-custom {
+    position: relative;
+    text-align: center;
+    padding: 12px 36px 8px;
+    border-bottom: 1px solid rgba(220,38,38,0.3);
+    margin-bottom: 12px;
+}
+.hell-skull-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.hell-skull-row h3 {
+    font-size: 1.2em;
+    font-weight: 900;
+    color: #ff4444;
+    text-shadow: 0 0 20px rgba(255,68,68,0.6);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    animation: hellTitleGlow 1.5s ease-in-out infinite alternate;
+}
+@keyframes hellTitleGlow {
+    from { text-shadow: 0 0 10px rgba(255,68,68,0.4); }
+    to   { text-shadow: 0 0 30px rgba(255,68,68,0.9), 0 0 60px rgba(255,100,0,0.4); }
+}
+.hell-skull-icon {
+    font-size: 1.4em;
+    animation: skullPulse 1s ease-in-out infinite alternate;
+}
+@keyframes skullPulse {
+    from { transform: scale(1) rotate(-5deg); }
+    to   { transform: scale(1.15) rotate(5deg); }
+}
+.hell-close-btn {
+    position: absolute !important;
+    top: 10px !important; right: 10px !important;
+    background: rgba(220,38,38,0.15) !important;
+    border: 1px solid rgba(220,38,38,0.3) !important;
+    color: #ff6666 !important;
+}
+
+.hell-modal-rules {
+    background: rgba(200,0,0,0.1);
+    border: 1px solid rgba(200,0,0,0.35);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin: 8px 0 14px;
+}
+.hell-modal-rules p { margin: 0 0 6px; font-size: .88em; color: #ff9999; }
+.hell-modal-rules ul { margin: 0 0 0 16px; padding: 0; font-size: .82em; color: #ffcccc; }
+.hell-modal-rules li { margin-bottom: 5px; line-height: 1.4; }
+
+.hell-participants-label {
+    margin: 10px 0 6px;
+    font-size: .88em;
+    color: #ff9999;
+}
+.hell-participants-list {
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: 200px; overflow-y: auto;
+}
+.hell-participant-option label {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    background: rgba(220,38,38,0.08);
+    border: 1px solid rgba(220,38,38,0.2);
+    border-radius: 8px; cursor: pointer; font-size: .9em;
+    transition: background 0.2s;
+}
+.hell-participant-option label:hover { background: rgba(220,38,38,0.15); }
+.hell-participant-option input { width: 16px; height: 16px; accent-color: #dc2626; }
+
+/* Botones de acción */
+.hell-action-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+}
+.btn-hell-only-challenge {
+    background: linear-gradient(135deg, #7a6200, #c9a200) !important;
+    border: 1.5px solid #ffd700 !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    font-size: .95em !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+}
+.btn-hell-only-challenge:hover {
+    background: linear-gradient(135deg, #c9a200, #ffd700) !important;
+    box-shadow: 0 0 20px rgba(255,215,0,0.4) !important;
+    transform: scale(1.02) !important;
+}
+.btn-hell-start {
+    background: linear-gradient(135deg, #7f1d1d, #dc2626) !important;
+    border: 1.5px solid rgba(255,100,100,0.4) !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+    font-size: .95em !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+    animation: hellBtnPulse 2s ease-in-out infinite;
+}
+@keyframes hellBtnPulse {
+    0%,100% { box-shadow: 0 0 10px rgba(220,38,38,0.3); }
+    50%      { box-shadow: 0 0 25px rgba(220,38,38,0.7); }
+}
+.btn-hell-start:hover {
+    background: linear-gradient(135deg, #dc2626, #ff4444) !important;
+    transform: scale(1.02) !important;
+}
+
+/* ── Challenge rules box ──────────────────────────────── */
+.challenge-rules-box {
+    background: rgba(255,255,255,0.04); border-radius: 8px;
+    padding: 8px 12px; margin: 8px 0; font-size: .82em;
+}
+.challenge-rules-box p { margin: 3px 0; color: #ccc; }
+
+/* ── Connection indicator ─────────────────────────────── */
+.mp-online  { color: #6bff6b; font-size: .75em; }
+.mp-offline { color: #ff6b6b; font-size: .75em; animation: pulse 1s infinite; }

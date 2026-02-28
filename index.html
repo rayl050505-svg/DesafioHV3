@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Quest Pro</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="multiplayer.css">
+    <link rel="stylesheet" href="ui-improvements.css">
+</head>
+<body>
+    <!-- TOP ACTION BAR -->
+    <div id="top-action-bar">
+        <button class="top-bar-btn" id="theme-toggle-btn" onclick="setTheme(!document.body.classList.contains('light-theme'))" title="Cambiar tema">☀️</button>
+        <button class="top-bar-btn" onclick="initTutorial(); localStorage.removeItem('tutorialDone'); initTutorial();" title="Tutorial">❓</button>
+    </div>
+
+    <!-- TUTORIAL OVERLAY -->
+    <div id="tutorial-overlay" style="display:none">
+        <div id="tutorial-box">
+            <h4 id="tutorial-title">Título</h4>
+            <p id="tutorial-text">Texto</p>
+            <div class="tutorial-btns">
+                <span id="tutorial-step-count">1/7</span>
+                <button class="btn-tutorial-skip" onclick="skipTutorial()">Saltar</button>
+                <button class="btn-tutorial-next" onclick="nextTutorialStep()">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+    <div id="custom-alert-container"></div>
+    
+    <!-- WIDGET DE RACHA -->
+    <div id="streak-widget" class="streak-widget" onclick="openStreakCalendar()" title="Ver racha">
+        <div class="streak-fire">💤</div>
+        <div class="streak-count">0</div>
+    </div>
+
+    <!-- MODAL DE RACHA -->
+    <div id="streak-modal" class="streak-modal-overlay" style="display:none" onclick="if(event.target===this)closeStreakModal()">
+        <div class="streak-modal-box">
+            <div class="streak-modal-header">
+                <h3>🔥 Racha de Estudio</h3>
+                <button class="mp-close-btn" onclick="closeStreakModal()">✕</button>
+            </div>
+            <div id="streak-modal-body"></div>
+        </div>
+    </div>
+    <button id="sound-toggle-btn" onclick="
+        const on = SoundSystem.toggle();
+        this.textContent = on ? '🔊' : '🔇';
+        this.title = on ? 'Sonido activado' : 'Sonido desactivado';
+    " title="Sonido activado">🔊</button>
+    
+    <!-- WIN CELEBRATION OVERLAY -->
+    <div id="win-celebration-overlay" class="win-overlay" style="display:none"></div>
+    
+    <div id="rank-up-overlay" class="rank-up-overlay">
+        <div class="rank-up-box">
+            <i id="rank-up-icon" class="material-icons rank-up-icon">star</i>
+            <h1 id="rank-up-new-rank">¡ASCENSO DE RANGO!</h1>
+            <p>¡Desbloqueaste nuevas recompensas y desafíos!</p>
+        </div>
+    </div>
+
+    <nav class="mobile-nav">
+        <div class="nav-item active" data-target="perfil">
+            <i class="material-icons">person</i>
+            <span>Perfil</span>
+        </div>
+        <div class="nav-item" data-target="estudio">
+            <i class="material-icons">book</i>
+            <span>Estudio</span>
+        </div>
+        <div class="nav-item" data-target="ejercicios">
+            <i class="material-icons">fitness_center</i>
+            <span>Ejercicios</span>
+        </div>
+        <div class="nav-item" data-target="ranking">
+            <i class="material-icons">leaderboard</i>
+            <span>Ranking</span>
+        </div>
+        <div class="nav-item" data-target="pase-hv">
+            <i class="material-icons">workspace_premium</i>
+            <span>Pase HV</span>
+        </div>
+        <div class="nav-item" data-target="tienda">
+            <i class="material-icons">store</i>
+            <span>Tienda</span>
+        </div>
+        <div class="nav-item" data-target="casino">
+            <i class="material-icons">casino</i>
+            <span>Casino</span>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <main class="main-content">
+            
+            <section id="perfil" class="app-section">
+                <!-- Cabecera compacta del perfil -->
+                <div class="profile-header">
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <div class="mini-avatar" style="width:48px;height:48px;font-size:1.5em">👤</div>
+                        <div>
+                            <div style="display:flex;align-items:center;gap:6px">
+                                <span id="equipped-banner" class="equipped-banner"></span>
+                                <h3 id="mostrar-nombre" style="margin:0">Estudiante Desafío</h3>
+                            </div>
+                            <p id="current-rank" style="margin:2px 0;font-size:.95em;font-weight:bold"></p>
+                        </div>
+                    </div>
+                    <div class="resource-grid" style="margin-top:12px">
+                        <div class="resource-box">🥇<span id="total-lingotes">0</span></div>
+                        <div class="resource-box">💎<span id="total-gemas">0</span></div>
+                        <div class="resource-box">🎰<span id="total-fichas">10</span></div>
+                        <div class="resource-box">🎟️<span id="total-hv-tickets">0</span></div>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('nivel-rango')">
+                        <h3>📈 Nivel y Rango</h3>
+                        <span class="collapse-chevron" id="chevron-nivel-rango">▼</span>
+                    </div>
+                    <div class="collapse-body" id="collapse-nivel-rango">
+                        <h4>Nivel <span id="current-level">1</span>: <span id="level-progress-text">0 / 120 XP</span></h4>
+                        <div class="progress-container"><div id="level-progress-bar" class="progress-bar" style="width:0%"></div></div>
+                        <h4 style="margin-top:12px">Puntos de Rango: <span id="rank-progress-text">0 / 1000</span></h4>
+                        <div class="progress-container"><div id="rank-progress-bar" class="progress-bar" style="width:0%;background:var(--accent-color)"></div></div>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('historial-estudio')">
+                        <h3>🕒 Historial de Estudio</h3>
+                        <span class="collapse-chevron" id="chevron-historial-estudio">▶</span>
+                    </div>
+                    <div class="collapse-body collapsed" id="collapse-historial-estudio">
+                        <div class="stat-grid">
+                            <div class="stat-box">Total min: <span id="total-horas-min">0</span></div>
+                            <div class="stat-box">Últ. 7 días: <span id="horas-7dias">0h 0m</span></div>
+                            <div class="stat-box">Rango máx: <span id="max-rank">Novato</span></div>
+                            <div class="stat-box">Total: <span id="total-horas-general">0h 0m</span></div>
+                        </div>
+                        <div id="daily-history-list" class="daily-history-list" style="margin-top:12px">
+                            <p style="color:var(--secondary-text)">No hay datos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('estadisticas')">
+                        <h3>📊 Estadísticas</h3>
+                        <span class="collapse-chevron" id="chevron-estadisticas">▶</span>
+                    </div>
+                    <div class="collapse-body collapsed" id="collapse-estadisticas">
+                        <div class="stat-grid">
+                            <div class="stat-box">XP Total: <span id="total-xp">0</span></div>
+                            <div class="stat-box">Boosts: <span id="active-boosts">Ninguno</span></div>
+                            <div class="stat-box">Victorias Minas: <span id="total-minesweeper-wins">0</span></div>
+                            <div class="stat-box">Jackpots Slots: <span id="total-slots-wins">0</span></div>
+                            <div class="stat-box">Victorias Botellas: <span id="total-shell-wins">0</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('banners')">
+                        <h3>🚩 Estandartes</h3>
+                        <span class="collapse-chevron" id="chevron-banners">▶</span>
+                    </div>
+                    <div class="collapse-body collapsed" id="collapse-banners">
+                        <div id="banner-inventory-list" class="banner-inventory-list">
+                            <p style="color:var(--secondary-text)">Ninguno desbloqueado.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('ajustes-perfil')">
+                        <h3>⚙️ Ajustes</h3>
+                        <span class="collapse-chevron" id="chevron-ajustes-perfil">▶</span>
+                    </div>
+                    <div class="collapse-body collapsed" id="collapse-ajustes-perfil">
+                        <div class="input-group">
+                            <label for="nombre-usuario">Cambiar Nombre:</label>
+                            <input type="text" id="nombre-usuario" placeholder="Nuevo Nombre">
+                        </div>
+                        <button id="guardar-nombre-btn" style="margin-top:10px">Guardar Nombre</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="estudio" class="app-section hidden">
+                <!-- Mini perfil -->
+                <div id="mini-profile-bar"></div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('estudio-form')">
+                        <h3>📚 Nueva Sesión</h3>
+                        <span class="collapse-chevron" id="chevron-estudio-form">▼</span>
+                    </div>
+                    <div class="collapse-body" id="collapse-estudio-form">
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label for="materia-estudio">Materia o Tema:</label>
+                            <input type="text" id="materia-estudio" placeholder="Matemáticas, Historia, Programación..." value="General">
+                        </div>
+                        <label style="margin-bottom: 5px;">Duración:</label>
+                        <div id="duration-selector" class="duration-selector">
+                            <button class="duration-btn" data-minutes="15">15 Min</button>
+                            <button class="duration-btn" data-minutes="30">30 Min</button>
+                            <button class="duration-btn" data-minutes="60">60 Min</button>
+                        </div>
+                        <p id="xp-preview" style="margin-top: 12px; font-weight: bold; color: var(--accent-color);">Selecciona una duración.</p>
+                        <button id="registrar-btn" style="margin-top: 14px; width:100%;" disabled>✅ Completar Sesión</button>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('estudio-social')">
+                        <h3>👥 Amigos y Desafíos <span id="challenge-badge" class="notif-badge" style="display:none">●</span></h3>
+                        <span class="collapse-chevron" id="chevron-estudio-social">▶</span>
+                    </div>
+                    <div class="collapse-body collapsed" id="collapse-estudio-social">
+
+                        <!-- ID y amigos -->
+                        <p style="font-size:.82em;color:var(--secondary-text);margin-bottom:8px">
+                            Tu ID: <strong id="my-player-id" class="player-id-display">Cargando...</strong>
+                            <button class="btn-copy-id" onclick="navigator.clipboard.writeText(document.getElementById('my-player-id').textContent);showCustomAlert('¡ID copiado!','success')">📋</button>
+                            <span id="mp-connection-indicator" class="mp-online">🟢</span>
+                            <button class="btn-global-chat" onclick="MP.openGlobalChat()" style="margin-left:6px;font-size:.78em;padding:3px 8px">
+                                🌍 Chat Global <span id="global-chat-badge" class="notif-badge" style="display:none">●</span>
+                            </button>
+                        </p>
+                        <div class="add-friend-form" style="margin-bottom:12px">
+                            <div class="friend-inputs">
+                                <input type="text" id="friend-id-input" placeholder="ID amigo (HV-XXXXXX)" maxlength="12" style="text-transform:uppercase">
+                            </div>
+                            <button id="add-friend-btn" class="add-friend-btn">🔗 Conectar</button>
+                        </div>
+                        <div id="friends-list-container" class="friends-list-container">
+                            <p style="color:var(--secondary-text);text-align:center;padding:10px;font-size:.85em">No tienes amigos conectados aún.</p>
+                        </div>
+
+                        <hr style="margin:12px 0;border-color:rgba(255,255,255,0.08)">
+
+                        <!-- Desafíos -->
+                        <p style="font-weight:600;font-size:.9em;margin-bottom:8px">⚔️ Desafíos activos</p>
+                        <div id="challenges-container">
+                            <p style="color:var(--secondary-text);text-align:center;padding:10px;font-size:.85em">Sin desafíos activos.</p>
+                        </div>
+
+                        <hr style="margin:12px 0;border-color:rgba(255,255,255,0.08)">
+
+                        <!-- Semana Infernal -->
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                            <p style="font-weight:600;font-size:.9em;margin:0">🔴 Semana Infernal</p>
+                            <button class="btn-create-hell" onclick="MP.openHellWeekModal()" style="font-size:.78em;padding:4px 10px">+ Crear</button>
+                        </div>
+                        <p style="font-size:.78em;color:var(--secondary-text);margin-bottom:8px">7 días · Recompensas ×2 · El mejor gana el banner 😈</p>
+                        <div id="hell-invites-container"></div>
+                        <div id="hell-weeks-container">
+                            <p style="color:var(--secondary-text);text-align:center;padding:8px;font-size:.85em">Sin semanas activas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('misiones')">
+                        <h3>🎯 Misiones Diarias</h3>
+                        <span class="collapse-chevron" id="chevron-misiones">▼</span>
+                    </div>
+                    <div class="collapse-body" id="collapse-misiones">
+                        <ul id="missions-list" class="mission-list"><li><p>Cargando...</p></li></ul>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('logros')">
+                        <h3>🏆 Logros</h3>
+                        <span class="collapse-chevron" id="chevron-logros">▶</span>
+                    </div>
+                    <div class="collapse-body collapsed" id="collapse-logros">
+                        <div id="achievements-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ejercicios" class="app-section hidden">
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('ejercicios-historial')">
+                        <h3>📋 Historial de Ejercicios</h3>
+                        <span class="collapse-chevron" id="chevron-ejercicios-historial">▶</span>
+                    </div>
+                    <div class="collapse-body collapsed" id="collapse-ejercicios-historial">
+                        <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+                            <button id="clear-exercise-history-btn" class="btn-ghost-sm">Limpiar historial</button>
+                        </div>
+                        <div id="exercise-history-list" class="exercise-history-list">
+                            <p class="empty-msg">Aún no has registrado ejercicios.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('ejercicios-form')">
+                        <h3>💪 Registrar Entrenamiento</h3>
+                        <span class="collapse-chevron" id="chevron-ejercicios-form">▼</span>
+                    </div>
+                    <div class="collapse-body" id="collapse-ejercicios-form">
+                        <div class="exercise-grid">
+                            <div class="exercise-item">
+                                <div class="exercise-header"><span class="exercise-icon">🦵</span><h4>Sentadillas</h4></div>
+                                <p>Total: <span id="sentadillas-total">0</span></p>
+                                <div class="exercise-input-group">
+                                    <input type="number" id="sentadillas-input" placeholder="Cantidad" min="1">
+                                    <button class="exercise-btn" data-exercise="sentadillas">Reg.</button>
+                                </div>
+                            </div>
+                            <div class="exercise-item">
+                                <div class="exercise-header"><span class="exercise-icon">💪</span><h4>Flexiones</h4></div>
+                                <p>Total: <span id="flexiones-total">0</span></p>
+                                <div class="exercise-input-group">
+                                    <input type="number" id="flexiones-input" placeholder="Cantidad" min="1">
+                                    <button class="exercise-btn" data-exercise="flexiones">Reg.</button>
+                                </div>
+                            </div>
+                            <div class="exercise-item">
+                                <div class="exercise-header"><span class="exercise-icon">🏋️‍♂️</span><h4>Pull-ups</h4></div>
+                                <p>Total: <span id="pullups-total">0</span></p>
+                                <div class="exercise-input-group">
+                                    <input type="number" id="pullups-input" placeholder="Cantidad" min="1">
+                                    <button class="exercise-btn" data-exercise="pullups">Reg.</button>
+                                </div>
+                            </div>
+                            <div class="exercise-item">
+                                <div class="exercise-header"><span class="exercise-icon">🔥</span><h4>Burpees</h4></div>
+                                <p>Total: <span id="burpees-total">0</span></p>
+                                <div class="exercise-input-group">
+                                    <input type="number" id="burpees-input" placeholder="Cantidad" min="1">
+                                    <button class="exercise-btn" data-exercise="burpees">Reg.</button>
+                                </div>
+                            </div>
+                            <div class="exercise-item">
+                                <div class="exercise-header"><span class="exercise-icon">⚖️</span><h4>Plancha (seg)</h4></div>
+                                <p>Total: <span id="plancha-total">0</span>s</p>
+                                <div class="exercise-input-group">
+                                    <input type="number" id="plancha-input" placeholder="Segundos" min="1">
+                                    <button class="exercise-btn" data-exercise="plancha">Reg.</button>
+                                </div>
+                            </div>
+                            <div class="exercise-item">
+                                <div class="exercise-header"><span class="exercise-icon">⚡</span><h4>Saltos</h4></div>
+                                <p>Total: <span id="saltos-total">0</span></p>
+                                <div class="exercise-input-group">
+                                    <input type="number" id="saltos-input" placeholder="Cantidad" min="1">
+                                    <button class="exercise-btn" data-exercise="saltos">Reg.</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ranking" class="app-section hidden">
+                <div class="ranking-header">
+                    <div class="your-position">
+                        <h3>Tu Posición</h3>
+                        <div class="position-card">
+                            <div class="position-number">#<span id="user-position">–</span></div>
+                            <div class="position-info">
+                                <h4 id="user-name-ranking">–</h4>
+                                <p><span id="user-points-ranking">0</span> pts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contador de temporada -->
+                <div class="season-countdown-card">
+                    <div class="season-cd-left">
+                        <span class="season-cd-icon">⏳</span>
+                        <div>
+                            <div class="season-cd-title">Fin de Temporada</div>
+                            <div class="season-cd-sub">Ranking se reinicia el 1 del mes</div>
+                        </div>
+                    </div>
+                    <div id="season-countdown" class="season-cd-timer">–</div>
+                </div>
+
+                <!-- Retos Difíciles Diarios -->
+                <div class="collapse-card" style="margin-top:12px">
+                    <div class="collapse-header" onclick="toggleCollapse('retos-dificiles')">
+                        <h3>💀 Retos del Día</h3>
+                        <span class="collapse-chevron" id="chevron-retos-dificiles">▼</span>
+                    </div>
+                    <div class="collapse-body" id="collapse-retos-dificiles">
+                        <p style="color:var(--secondary-text);font-size:.8em;margin-bottom:10px">Retos muy difíciles renovados cada día. Las recompensas escalan con la dificultad.</p>
+                        <div id="daily-challenges-list"></div>
+                    </div>
+                </div>
+
+                <!-- Sistema de rangos — scroll horizontal -->
+                <div class="collapse-card">
+                    <div class="collapse-header" onclick="toggleCollapse('rangos-overview')">
+                        <h3>🎖️ Sistema de Rangos</h3>
+                        <span class="collapse-chevron" id="chevron-rangos-overview">▶</span>
+                    </div>
+                    <div class="collapse-body collapsed" id="collapse-rangos-overview">
+                        <div id="ranks-overview-container" class="ranks-overview-container ranks-scroll"></div>
+                    </div>
+                </div>
+
+                <!-- Top Global — scroll -->
+                <div class="ranking-controls" style="margin-top:14px">
+                    <div class="filter-buttons">
+                        <button id="filter-all" class="filter-btn active">Todos</button>
+                        <button id="filter-top10" class="filter-btn">Top 10</button>
+                        <button id="filter-around" class="filter-btn">Cerca</button>
+                        <button id="filter-friends" class="filter-btn">Amigos</button>
+                    </div>
+                </div>
+                <div class="ranking-list ranking-scroll">
+                    <div id="ranking-container"></div>
+                </div>
+            </section>
+
+            <section id="pase-hv" class="app-section hidden">
+                <h2>Pase de Horas de Vuelo (HV) ✨</h2>
+
+                <div class="progress-panel" style="background-color: #3f3f3f; border-left: 5px solid #FFD700;">
+                    <h3>Pase HV Nivel <span id="pass-level">1</span> <span id="pass-plus-status"></span></h3>
+                    <h4>XP: <span id="pass-progress-text">0 / 500 XP</span></h4>
+                    <div class="progress-container">
+                        <div id="pass-progress-bar" class="progress-bar" style="width: 0%; background-color: #FFD700;"></div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h3>Recompensas del Pase (Nivel 1 - 30)</h3>
+                <div id="pass-rewards-container" class="pass-rewards-container">
+                    </div>
+            </section>
+
+            <section id="tienda" class="app-section hidden">
+                <h2>Tienda 🛒</h2>
+                <hr>
+
+                <div class="shop-grid">
+                    
+                    <div class="shop-item cost-lingotes">
+                        <h4>Gema por Lingotes 💎</h4>
+                        <p style="margin: 5px 0;">Obtén una valiosa Gema al instante.</p>
+                        <p>Costo: **10 🥇 Lingotes**</p>
+                        <button id="buy-gem-for-lingots">Comprar (10 🥇)</button>
+                    </div>
+
+                    <div class="shop-item cost-lingotes">
+                        <h4>Pack de Fichas 🎰</h4>
+                        <p style="margin: 5px 0;">Pack de 10 Fichas para el Casino.</p>
+                        <p>Costo: **15 🥇 Lingotes**</p>
+                        <button id="buy-chips-pack">Comprar (15 🥇)</button>
+                    </div>
+                    
+                    <div class="shop-item chest-box">
+                        <h4>Cofre Épico 🎁</h4>
+                        <p style="margin: 5px 0;">Contiene recursos raros y fichas.</p>
+                        <p>Costo: **5 💎 Gemas**</p>
+                        <button id="buy-epic-chest">Comprar (5 💎)</button>
+                    </div>
+                    
+                    <div class="shop-item chest-box">
+                        <h4>Cofre Legendario 👑</h4>
+                        <p style="margin: 5px 0;">Contiene grandes cantidades de gemas y lingotes.</p>
+                        <p>Costo: **7 💎 Gemas**</p>
+                        <button id="buy-legendary-chest">Comprar (7 💎)</button>
+                    </div>
+
+                    <div class="shop-item cost-lingotes">
+                        <h4>Boost de XP (x3) 🚀</h4>
+                        <p style="margin: 5px 0;">Triple XP por un tiempo limitado.</p>
+                        <p>Costo: **50 🥇 Lingotes**</p>
+                        <button id="buy-xp-boost">Comprar (50 🥇)</button>
+                    </div>
+
+                    <div class="shop-item cost-lingotes">
+                        <h4>Boost de Puntos (x2) ✨</h4>
+                        <p style="margin: 5px 0;">Doble Puntos de Rango por un tiempo limitado.</p>
+                        <p>Costo: **30 🥇 Lingotes**</p>
+                        <button id="buy-points-boost">Comprar (30 🥇)</button>
+                    </div>
+
+                    <div class="shop-item streak-item">
+                        <h4>Escudo de Racha 🛡️</h4>
+                        <p style="margin: 5px 0;">Protege tu racha por 2 días si no estudias.</p>
+                        <p>Costo: **3 💎 Gemas**</p>
+                        <button id="buy-streak-shield">Comprar (3 💎)</button>
+                    </div>
+
+                    <div class="shop-item streak-item">
+                        <h4>Recuperar Racha ⚡</h4>
+                        <p style="margin: 5px 0;">Recupera tu racha perdida instantáneamente.</p>
+                        <p>Costo: **10 💎 Gemas** | También en cofres (raro)</p>
+                        <button id="buy-streak-recovery">Comprar (10 💎)</button>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h3>Inventario de Cofres</h3>
+                <div class="inventory-panel resource-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span>Cofres Épicos: <span id="epic-chests-count">0</span></span>
+                        <button id="open-epic-chest" disabled>Abrir Cofre 🎁</button>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Cofres Legendarios: <span id="legendary-chests-count">0</span></span>
+                        <button id="open-legendary-chest" disabled>Abrir Cofre 👑</button>
+                    </div>
+                </div>
+
+            </section>
+            
+            <section id="casino" class="app-section hidden">
+                <h2>Casino 🎲</h2>
+                
+                <div class="casino-game">
+                    <h3>Tragaperras (Slots) 🎰</h3>
+                    <div id="slots-jackpot-display" class="jackpot-display">
+                        </div>
+                    <p style="color: var(--secondary-text);">Costo: 2 Fichas por giro.</p>
+                    
+                    <div class="slots-machine">
+                        <div class="reel-container">
+                            <div class="reel" id="reel-1">?</div>
+                            <div class="reel" id="reel-2">?</div>
+                            <div class="reel" id="reel-3">?</div>
+                        </div>
+                    </div>
+                    
+                    <p id="slots-result" style="text-align: center; margin-bottom: 15px; font-weight: bold;">Gira para ganar lingotes, gemas y más.</p>
+                    <button id="spin-btn" style="background-color: var(--accent-color); width: 100%;">Girar (2 🎰)</button>
+                </div>
+
+                <div class="casino-game">
+                    <h3>Juego de las Tres Botellas 🍾</h3>
+                    <div id="shell-jackpot-display" class="jackpot-display">
+                        </div>
+                    <p style="color: var(--secondary-text);">¡Encuentra la botella con el premio! Apuesta fichas para mayores ganancias.</p>
+                    
+                    <div class="bet-selector">
+                        <h4>Selecciona tu Apuesta:</h4>
+                        <div class="bet-buttons">
+                            <button class="bet-btn" data-bet="1">1 🎰</button>
+                            <button class="bet-btn" data-bet="5">5 🎰</button>
+                            <button class="bet-btn" data-bet="10">10 🎰</button>
+                            <button class="bet-btn" data-bet="25">25 🎰</button>
+                        </div>
+                        <p id="bet-preview">Selecciona una apuesta para comenzar.</p>
+                    </div>
+                    
+                    <div class="shell-game-container">
+                        <div class="bottles-container">
+                            <div class="bottle" id="bottle-1" data-bottle="1">
+                                <div class="bottle-icon">🍾</div>
+                            </div>
+                            <div class="bottle" id="bottle-2" data-bottle="2">
+                                <div class="bottle-icon">🍾</div>
+                            </div>
+                            <div class="bottle" id="bottle-3" data-bottle="3">
+                                <div class="bottle-icon">🍾</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p id="shell-result" style="text-align: center; margin-bottom: 15px; font-weight: bold;">Selecciona tu apuesta y luego elige una botella.</p>
+                    <button id="shell-reset-btn" style="background-color: var(--primary-color); width: 100%;">
+                        Nueva Partida
+                    </button>
+                </div>
+
+                <div class="casino-game">
+                    <h3>Buscaminas 💣</h3>
+                    <div id="minesweeper-jackpot-display" class="jackpot-display">
+                        </div>
+                    <p style="color: var(--secondary-text);">Costo: 5 Fichas por partida. ¡Descubre premios sin explotar!</p>
+
+                    <div id="minesweeper-grid" class="minesweeper-grid-container">
+                        </div>
+                    
+                    <p id="minesweeper-result" style="text-align: center; margin-bottom: 15px; font-weight: bold;">Pulsa "Iniciar" para jugar.</p>
+                    <button id="minesweeper-start-btn" style="background-color: var(--primary-color); width: 100%;">
+                        Iniciar Partida (5 🎰)
+                    </button>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- ═══ MODAL: CHAT ═══ -->
+    <div id="chat-modal" class="mp-modal" style="display:none" onclick="if(event.target===this)MP.closeChat()">
+        <div class="mp-modal-box chat-box">
+            <div class="mp-modal-header">
+                <h3 id="chat-title">💬 Chat</h3>
+                <button class="mp-close-btn" onclick="MP.closeChat()">✕</button>
+            </div>
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input-row">
+                <input type="text" id="chat-input" placeholder="Escribe un mensaje..." maxlength="200"
+                    onkeydown="if(event.key==='Enter'){const v=this.value; if(MP._currentChatId==='__global__') MP.sendGlobalMessage(v); else MP.sendChatMessage(v); this.value='';}">
+                <button onclick="const v=document.getElementById('chat-input').value; if(MP._currentChatId==='__global__') MP.sendGlobalMessage(v); else MP.sendChatMessage(v); document.getElementById('chat-input').value=''">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ MODAL: DESAFÍO ═══ -->
+    <div id="challenge-modal" class="mp-modal" style="display:none">
+        <div class="mp-modal-box" onclick="event.stopPropagation()">
+            <div class="mp-modal-header">
+                <h3 id="challenge-modal-title">⚔️ Enviar Desafío</h3>
+                <button class="mp-close-btn" onclick="MP.closeChallengeModal()">✕</button>
+            </div>
+            <div class="challenge-form">
+                <input type="hidden" id="challenge-friend-id">
+                <label>Tipo de desafío:</label>
+                <select id="challenge-type" class="challenge-select">
+                    <option value="study">📚 Estudiar más minutos</option>
+                    <option value="points">🏆 Ganar más puntos</option>
+                    <option value="xp">⭐ Ganar más XP</option>
+                </select>
+                <label>Duración:</label>
+                <select id="challenge-hours" class="challenge-select">
+                    <option value="1">1 hora</option>
+                    <option value="6">6 horas</option>
+                    <option value="24" selected>24 horas</option>
+                    <option value="72">3 días</option>
+                    <option value="168">1 semana</option>
+                </select>
+                <button class="btn-send-challenge" onclick="MP.submitChallenge()">⚔️ ¡Enviar Desafío!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ MODAL: SEMANA INFERNAL ═══ -->
+    <div id="hell-week-modal" class="mp-modal hell-week-modal-wrapper" style="display:none" onclick="if(event.target===this)MP.closeHellWeekModal()">
+        <!-- Partículas de fuego de fondo -->
+        <div class="hell-bg-fires" id="hell-bg-fires"></div>
+        
+        <div class="mp-modal-box hell-modal-box">
+            <div class="hell-modal-header-custom">
+                <div class="hell-skull-row">
+                    <span class="hell-skull-icon">😈</span>
+                    <h3>SEMANA INFERNAL</h3>
+                    <span class="hell-skull-icon">😈</span>
+                </div>
+                <button class="mp-close-btn hell-close-btn" onclick="MP.closeHellWeekModal()">✕</button>
+            </div>
+            
+            <div class="hell-modal-rules">
+                <p><b>⚠️ Reglas que aceptan todos los participantes:</b></p>
+                <ul>
+                    <li>✅ Check-in antes de las 7:00 AM cada día</li>
+                    <li>📚 Mínimo 8 horas de estudio diarias</li>
+                    <li>💪 Al menos 1 ejercicio registrado por día</li>
+                    <li>🎰 Casino bloqueado durante 7 días</li>
+                    <li>⭐ Todas las recompensas ×2</li>
+                    <li>❌ Incumplir = -500pts, -10🥇, -1💎</li>
+                    <li>🏆 El que más horas acumule gana el banner 😈 Diablo</li>
+                </ul>
+            </div>
+            
+            <p class="hell-participants-label">Selecciona participantes (amigos conectados):</p>
+            <div id="hell-participants-list" class="hell-participants-list"></div>
+            
+            <div class="hell-action-btns">
+                <button class="btn-hell-only-challenge" onclick="MP.openOnlyChallenge()">⚔️ Solo Desafiar</button>
+                <button class="btn-hell-start" onclick="MP.createHellWeek()">🔴 ¡Iniciar Semana Infernal!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ FIREBASE SDK ═══ -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <!-- ═══ TU CONFIGURACIÓN FIREBASE ═══ -->
+    <!-- ⚠️ Reemplaza estos valores con los de tu proyecto en Firebase Console -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyApQJMz5jO99s7IbOg7ENgDSkU7yfGw8co",
+            authDomain: "desafiohv77.firebaseapp.com",
+            databaseURL: "https://desafiohv77-default-rtdb.firebaseio.com",
+            projectId: "desafiohv77",
+            storageBucket: "desafiohv77.firebasestorage.app",
+            messagingSenderId: "115931175415",
+            appId: "1:115931175415:web:73f7a8821cee4bc913f6f2"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="firebase-multiplayer.js"></script>
+    <script src="ui-improvements.js"></script>
+    <script>
+        // ── Iniciar multijugador ─────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                MP.init();
+                setTimeout(() => {
+                    MP._listenGlobalRanking();
+                    MP._listenIncomingChallenges();
+                    MP._listenFriendsRealtime();
+                    MP._listenGlobalChat();
+                    MP._listenSemanasInfernales();
+                }, 1000);
+            }, 500);
+        });
+
+        // ── Page Visibility: reconectar chat al volver a la pestaña ──
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && typeof MP !== 'undefined' && MP.db) {
+                console.log('[MP] Pestaña activa — verificando conexión...');
+                MP.db.goOnline();
+                // Re-abrir chat si estaba abierto
+                if (MP._currentChatId) {
+                    const path = MP._currentChatId === '__global__'
+                        ? 'globalChat/messages'
+                        : `chats/${MP._currentChatId}/messages`;
+                    MP._attachChatListener(MP._currentChatId, path);
+                }
+                // Actualizar mini perfil
+                if (typeof updateMiniProfile === 'function') updateMiniProfile();
+            }
+        });
+
+        // ── Actualizar mini perfil tras cada renderApp ───────
+        const _origRenderApp = window.renderApp;
+        if (typeof renderApp === 'function') {
+            window.addEventListener('load', () => {
+                const orig = renderApp;
+                window.renderApp = function(...args) {
+                    orig.apply(this, args);
+                    if (typeof updateMiniProfile === 'function') updateMiniProfile();
+                };
+            });
+        }
+    </script>
+</body>
+</html>
